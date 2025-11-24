@@ -78,6 +78,13 @@ COPY . .
 
 RUN ln -s /var/www/html/public /public
 
+RUN mkdir -p storage/logs \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    bootstrap/cache \
+ && chown -R www-data:www-data storage bootstrap/cache
+
 RUN composer install --no-dev --no-interaction --prefer-dist --no-progress --optimize-autoloader
 
 COPY --from=frontend /var/www/html/public ./public
@@ -85,7 +92,6 @@ COPY --from=frontend /var/www/html/public ./public
 # Nginx logs to stdout/stderr for Docker
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
  && ln -sf /dev/stderr /var/log/nginx/error.log \
- && mkdir -p storage/logs storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache \
  && chown -R www-data:www-data storage bootstrap/cache
 
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
