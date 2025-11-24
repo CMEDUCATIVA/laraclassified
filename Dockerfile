@@ -14,6 +14,9 @@ COPY webpack.mix*.js ./
 COPY resources ./resources
 COPY public ./public
 
+# Ensure legacy Mix configs referencing "/public" keep working
+RUN ln -s /var/www/html/public /public
+
 # Build all configured asset bundles (default + RTL + combined)
 RUN npm run prod
 
@@ -71,6 +74,8 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 COPY . .
+
+RUN ln -s /var/www/html/public /public
 
 RUN composer install --no-dev --no-interaction --prefer-dist --no-progress --optimize-autoloader
 
