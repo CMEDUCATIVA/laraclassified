@@ -10,11 +10,6 @@ services:
       - .env
     ports:
       - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
     volumes:
       - storage_data:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
@@ -26,11 +21,6 @@ services:
       - .env
     command: >
       sh -c "php artisan queue:work --sleep=3 --tries=3 --timeout=90 --no-interaction"
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
     volumes:
       - storage_data:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
@@ -42,46 +32,12 @@ services:
       - .env
     command: >
       sh -c "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
     volumes:
       - storage_data:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
     restart: unless-stopped
 
-  db:
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_DATABASE: laraclassified
-      MYSQL_USER: laraclassified
-      MYSQL_PASSWORD: laraclassified
-      MYSQL_ROOT_PASSWORD: supersecretroot
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-  redis:
-    image: redis:7-alpine
-    command: redis-server --appendonly yes
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
-
 volumes:
-  db_data:
-  redis_data:
   storage_data:
   bootstrap_cache:
+  
