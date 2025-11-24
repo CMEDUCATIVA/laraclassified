@@ -5,6 +5,13 @@ use Knuckles\Scribe\Config\Defaults;
 use Knuckles\Scribe\Config\AuthIn;
 use function Knuckles\Scribe\Config\{removeStrategies, configureStrategy};
 
+if (!class_exists(AuthIn::class)) {
+	return [
+		'title' => 'LaraClassifier API Documentation',
+		'description' => 'Scribe está deshabilitado en este entorno (dependencia de desarrollo no instalada).',
+	];
+}
+
 return [
 	
 	// The HTML <title> for the generated documentation.
