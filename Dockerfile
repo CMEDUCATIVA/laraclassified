@@ -30,7 +30,14 @@ FROM php:8.2-fpm-bookworm AS app
 ARG DEBIAN_FRONTEND=noninteractive
 ENV APP_ENV=production \
     PHP_OPCACHE_VALIDATE_TIMESTAMPS=0 \
-    PATH="/var/www/html/vendor/bin:${PATH}"
+    PATH="/var/www/html/vendor/bin:${PATH}" \
+    DB_HOST=${DB_HOST:-mysql} \
+    DB_PORT=${DB_PORT:-3306} \
+    DB_DATABASE=${DB_DATABASE:-laraclassified} \
+    DB_USERNAME=${DB_USERNAME:-laraclassified} \
+    DB_PASSWORD=${DB_PASSWORD:-secret} \
+    REDIS_HOST=${REDIS_HOST:-redis} \
+    REDIS_PORT=${REDIS_PORT:-6379}
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
