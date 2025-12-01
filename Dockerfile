@@ -45,6 +45,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     unzip \
     zip \
+    default-mysql-client \
     libpng-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
